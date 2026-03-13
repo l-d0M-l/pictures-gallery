@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pictures-gallery-practice</title>
+    <script type="module" src="./src/main.js" type="defer"></script>
+    <link rel="stylesheet" href="./src/styles/style.css" />
+  </head>
+  <body>
+    <form class="inputForm" id="inputForm">
+      <input
+        type="text"
+        name="search"
+        id="searchInputField"
+        class="searchInputField"
+        placeholder="Search images..."
+      />
+      <button type="submit" class="searchBtn">Search</button>
+    </form>
+
+    <ul class="js-gallery" id="app"></ul>
+    <button id="ladMoreBtn" class="load-more-btn visually-hidden">
+      Load more
+    </button>
+  </body>
+</html>

@@ -1,0 +1,149 @@
+:root {
+  --font-family: "Montserrat", sans-serif;
+}
+* {
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+ul {
+  list-style-type: none;
+}
+
+.inputForm {
+  text-align: center;
+  margin-top: 36px;
+}
+.searchInputField {
+  border: 1px solid rgba(128, 128, 128, 1);
+  outline: none;
+  border-radius: 4px;
+  width: 272px;
+
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 16px;
+  padding-right: 2px;
+
+  margin-right: 8px;
+
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0.04em;
+  color: #808080;
+}
+.searchInputField:hover {
+  border-color: #000000;
+}
+.searchInputField :active,
+.searchInputField:focus {
+  border-color: #4e75ff;
+}
+.searchBtn {
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 91px;
+  height: 40px;
+  background: #4e75ff;
+
+  border: none;
+  outline: none;
+
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.searchBtn:hover {
+  background: #6c8cff;
+}
+.searchBtn :active,
+.searchBtn:focus {
+  border: 2px solid black;
+}
+.outputField {
+  padding: 32px 156px;
+  /* text-align: center; */
+}
+.js-gallery {
+  display: flex; /* Enables the row layout */
+  flex-direction: row; /* Explicitly sets items in a row */
+  flex-wrap: wrap; /* Allows items to move to the next line if they don't fit */
+  gap: 20px; /* Adds space between cards */
+  justify-content: center; /* Centers the cards in the container */
+  list-style: none; /* Removes bullet points from <li> */
+  padding: 0;
+}
+
+.js-gallery-item {
+  width: 360px; /* Fixed width for each card */
+  /* Remove 'height' or set it to 'auto' to let the card grow with content */
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  border: 1px solid #808080;
+}
+
+.query-image {
+  width: 100%; /* Fills the 360px card width */
+  height: 200px; /* Keeps the image area consistent */
+  object-fit: cover; /* Crops the image to fit without stretching */
+  display: block;
+}
+
+.stats-list {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  margin-left: 20px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+
+  padding: 0;
+}
+
+.stats-list li {
+  text-align: center;
+}
+
+.load-more-btn {
+  margin: 0 auto;
+  display: block;
+
+  margin-top: 40px;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 125px;
+  height: 40px;
+
+  background: #4e75ff;
+
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.visually-hidden {
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+
+  outline: 0;
+  outline-offset: 0;
+}
