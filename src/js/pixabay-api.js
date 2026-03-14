@@ -1,5 +1,6 @@
-import axios from "axios";
+// import axios from "axios";
 // console.log(axios);
+import axios from "axios";
 
 const myApiKey = "48370446-8dcf2f9524038c25db09fe77e";
 
