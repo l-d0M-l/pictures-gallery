@@ -1,9 +1,16 @@
 import getImagesByQuery from "./js/pixabay-api";
 import renderData from "./js/render-functions";
-let outputField = document.querySelector("#app");
-let searchForm = document.querySelector("#inputForm");
-let loadMoreBtn = document.querySelector("#ladMoreBtn");
+import saveToFavourite from "./js/saveToFavourite";
+
+const outputField = document.querySelector("#app");
+const searchForm = document.querySelector("#inputForm");
+const loadMoreBtn = document.querySelector("#ladMoreBtn");
+
+const loadingIndicator = document.querySelector("#loading-indicator");
+
+// saveToFavourite(10167855);
 // console.log(searchForm);
+
 searchForm.addEventListener("submit", sumbitFormHandler);
 outputField.innerHTML = `Please enter an image to search...`;
 
@@ -29,36 +36,88 @@ function loadMoreFunction(e) {
 }
 
 async function renderFunction(searchQuery) {
+  document.querySelector("#collection-end").classList.add("visually-hidden");
   loadMoreBtn.classList.add("visually-hidden");
 
-  let per_page = 20;
-  let responseData = await getImagesByQuery(searchQuery, page);
+  loadingIndicator.classList.remove("visually-hidden");
 
-  // Use totalHits for Pixabay, as 'total' is the total images in their DB,
-  // but totalHits is what matches your specific search.
-  let totalPages = Math.ceil(responseData.totalHits / per_page);
-  let outputHTML = renderData(responseData.hits);
+  try {
+    const responseData = await getImagesByQuery(searchQuery, page);
+    const outputHTML = renderData(responseData.hits);
 
-  // 1. FIRST: Add the images to the DOM
-  outputField.insertAdjacentHTML("beforeend", outputHTML);
+    // Hide indicator AS SOON AS data is back
+    loadingIndicator.classList.add("visually-hidden");
 
-  // 2. SECOND: Now that images are on the page, measure and scroll
-  if (page > 1) {
-    const galleryItem = document.querySelector(".js-gallery-item");
+    outputField.insertAdjacentHTML("beforeend", outputHTML);
 
-    if (galleryItem) {
-      // Get the height of one card
-      const cardHeight = galleryItem.getBoundingClientRect().height;
+    // ... handle scrolling and Load More button visibility ...
+    const per_page = 20;
+    const totalPages = Math.ceil(responseData.totalHits / per_page);
 
-      window.scrollBy({
-        top: cardHeight * 2, // Scroll down 2 rows/cards
-        behavior: "smooth",
-      });
+    if (page > 1) {
+      const galleryItem = document.querySelector(".js-gallery-item");
+
+      if (galleryItem) {
+        // Get the height of one card
+        const cardHeight = galleryItem.getBoundingClientRect().height;
+
+        window.scrollBy({
+          top: cardHeight * 2, // Scroll down 2 rows/cards
+          behavior: "smooth",
+        });
+      }
     }
-  }
 
-  // 3. FINALLY: Show the button if there are more pages
-  if (page < totalPages) {
-    loadMoreBtn.classList.remove("visually-hidden");
+    if (page < totalPages) {
+      loadMoreBtn.classList.remove("visually-hidden");
+    } else {
+      document
+        .querySelector("#collection-end")
+        .classList.remove("visually-hidden");
+    }
+  } catch (error) {
+    loadingIndicator.classList.add("visually-hidden");
+    console.error("Search failed", error);
   }
 }
+
+//scroll up logic
+const scrollUpBtn = document.querySelector("#scroll-up-btn");
+scrollUpBtn.addEventListener("click", scrollUpHandler);
+
+// Show/Hide button based on scroll position
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 300) {
+    scrollUpBtn.classList.remove("visually-hidden");
+  } else {
+    scrollUpBtn.classList.add("visually-hidden");
+  }
+});
+
+function scrollUpHandler() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}
+
+outputField.addEventListener("click", async (e) => {
+  // Finds the button even if you click the icon inside it
+  const btn = e.target.closest(".save-btn");
+  if (!btn) return;
+
+  const id = btn.dataset.id;
+
+  // Visual feedback: disable and change color
+  btn.style.backgroundColor = "#28a745"; // Success green
+  btn.disabled = true;
+  btn.innerHTML = "✓"; // Quick checkmark icon
+
+  try {
+    await saveToFavourite(id);
+  } catch (error) {
+    btn.style.backgroundColor = "#dc3545"; // Error red
+    btn.disabled = false;
+    console.error("Save failed", error);
+  }
+});

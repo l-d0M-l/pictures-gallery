@@ -20,3 +20,18 @@ async function getImagesByQuery(query, page) {
 }
 
 export default getImagesByQuery;
+
+async function getImageById(id) {
+  let response = await axios.get(`https://pixabay.com/api/`, {
+    params: {
+      id,
+      key: myApiKey,
+    },
+  });
+
+  console.log(response.data);
+
+  return response.data;
+}
+
+export { getImageById };
