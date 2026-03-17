@@ -1,6 +1,3 @@
-:root {
-  --font-family: "Montserrat", sans-serif;
-}
 * {
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
@@ -8,7 +5,63 @@
 ul {
   list-style-type: none;
 }
+body {
+  margin: 0;
+  display: flex;
+  background-color: #fafafa; /* Slightly off-white for contrast */
+}
 
+.content-area {
+  flex-grow: 1;
+  padding: 20px;
+  min-height: 100vh;
+  margin-left: 130px;
+}
+/* =---------------Sidebar------------- */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 130px;
+  height: 100vh;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  padding: 40px 20px;
+  z-index: 10;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  text-align: center;
+}
+.sidebar-nav-el a {
+  text-decoration: none;
+  color: #ececec;
+  display: block;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+
+  background-color: #4e75ff;
+  padding: 6px;
+}
+
+.sidebar-nav-el a:hover {
+  /* background-color: #f0f3ff; */
+  /* color: #ffffff; */
+  transform: translateX(5px);
+}
+
+.sidebar-nav-el a.active {
+  background-color: #2a52d1;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(78, 117, 255, 0.3);
+  pointer-events: none;
+}
+/* ---------------------Input form styles---------- */
 .inputForm {
   text-align: center;
   margin-top: 36px;
@@ -63,24 +116,25 @@ ul {
 .searchBtn:focus {
   border: 2px solid black;
 }
+
+/* ----------output/gallery styles-------------- */
 .outputField {
   padding: 32px 156px;
   /* text-align: center; */
 }
 .js-gallery {
-  display: flex; /* Enables the row layout */
-  flex-direction: row; /* Explicitly sets items in a row */
-  flex-wrap: wrap; /* Allows items to move to the next line if they don't fit */
-  gap: 20px; /* Adds space between cards */
-  justify-content: center; /* Centers the cards in the container */
-  list-style: none; /* Removes bullet points from <li> */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
   padding: 0;
 }
 
 .js-gallery-item {
   position: relative;
-  width: 360px; /* Fixed width for each card */
-  /* Remove 'height' or set it to 'auto' to let the card grow with content */
+  width: 360px;
+
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 10px #0000001a;
@@ -94,9 +148,9 @@ ul {
 }
 
 .query-image {
-  width: 100%; /* Fills the 360px card width */
-  height: 200px; /* Keeps the image area consistent */
-  object-fit: cover; /* Crops the image to fit without stretching */
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
   display: block;
 }
 
@@ -154,13 +208,13 @@ ul {
 }
 .loading-indicator {
   font-size: 20px;
-  color: #808080; /* Matches your border color */
+  color: #808080;
   letter-spacing: 1px;
   text-align: center;
   padding: 20px;
 }
 
-/* Scroll u-p btn------------------------------- */
+/* -----------------------Scroll up btn------------------------------- */
 .scroll-up-btn {
   position: fixed;
   bottom: 30px;
@@ -179,14 +233,13 @@ ul {
   justify-content: center;
 }
 
-/* Creating the arrow using CSS borders */
 .scroll-up-btn::after {
   position: fixed;
   bottom: 30px;
   right: 30px;
   width: 50px;
   height: 50px;
-  background-color: #3e67ec; /* Your brand color */
+  background-color: #3e67ec;
   color: white;
   border: none;
   border-radius: 50%;
@@ -203,6 +256,7 @@ ul {
   background-color: #2a52d1;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
+
 /* ----------save to favourite button---------- */
 .save-btn {
   /* Positioning */
@@ -236,4 +290,25 @@ ul {
 
 .save-btn:active {
   transform: scale(0.9);
+}
+.save-btn-saved {
+  background-color: #28a745;
+}
+/* .save-btn-saved ::before {
+  content: "✓";
+} */
+
+.save-btn-saved svg {
+  display: none;
+}
+
+/* Inject the checkmark instead */
+.save-btn-saved::before {
+  content: "✓";
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+}
+.save-btn-saved:hover {
+  background-color: #208137;
 }

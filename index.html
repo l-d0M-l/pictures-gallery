@@ -9,30 +9,53 @@
     <link rel="stylesheet" href="./src/styles/style.css" />
   </head>
   <body>
-    <form class="inputForm" id="inputForm">
-      <input
-        type="text"
-        name="search"
-        id="searchInputField"
-        class="searchInputField"
-        placeholder="Search images..."
-      />
-      <button type="submit" class="searchBtn">Search</button>
-    </form>
+    <aside class="sidebar">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-el">
+          <a href="/package-lock.json" id="nav-main" class="active">Main</a>
+        </li>
+        <li class="sidebar-nav-el"><a href="/" id="nav-favs">Favourites</a></li>
+      </ul>
+    </aside>
+    <main class="content-area">
+      <form class="inputForm" id="inputForm">
+        <input
+          type="text"
+          name="search"
+          id="searchInputField"
+          class="searchInputField"
+          placeholder="Search images..."
+        />
+        <button type="submit" class="searchBtn">Search</button>
+      </form>
 
-    <ul class="js-gallery" id="app"></ul>
-    <p class="loading-indicator visually-hidden" id="loading-indicator">
-      Loading, please wait...
-    </p>
+      <ul class="js-gallery" id="app"></ul>
+      <p class="loading-indicator visually-hidden" id="loading-indicator">
+        Loading, please wait...
+      </p>
 
-    <button id="ladMoreBtn" class="load-more-btn visually-hidden">
-      Load more
-    </button>
+      <button id="ladMoreBtn" class="load-more-btn visually-hidden">
+        Load more
+      </button>
 
-    <p class="loading-indicator visually-hidden" id="collection-end">
-      Sorry, you have reach the end of the collection
-    </p>
+      <p class="loading-indicator visually-hidden" id="collection-end">
+        Sorry, you have reach the end of the collection
+      </p>
 
-    <button class="scroll-up-btn visually-hidden" id="scroll-up-btn"></button>
+      <button class="scroll-up-btn visually-hidden" id="scroll-up-btn">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M18 15l-6-6-6 6"></path>
+        </svg>
+      </button>
+    </main>
   </body>
 </html>

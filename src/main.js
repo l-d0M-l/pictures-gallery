@@ -1,5 +1,5 @@
 import getImagesByQuery from "./js/pixabay-api";
-import renderData from "./js/render-functions";
+import { renderData, renderFavourites } from "./js/render-functions";
 import saveToFavourite from "./js/saveToFavourite";
 
 const outputField = document.querySelector("#app");
@@ -7,6 +7,9 @@ const searchForm = document.querySelector("#inputForm");
 const loadMoreBtn = document.querySelector("#ladMoreBtn");
 
 const loadingIndicator = document.querySelector("#loading-indicator");
+
+const navMain = document.querySelector("#nav-main");
+const navFavs = document.querySelector("#nav-favs");
 
 // saveToFavourite(10167855);
 // console.log(searchForm);
@@ -101,23 +104,56 @@ function scrollUpHandler() {
   });
 }
 
+//add to favouurites logic
 outputField.addEventListener("click", async (e) => {
   // Finds the button even if you click the icon inside it
   const btn = e.target.closest(".save-btn");
   if (!btn) return;
 
-  const id = btn.dataset.id;
-
-  // Visual feedback: disable and change color
-  btn.style.backgroundColor = "#28a745"; // Success green
-  btn.disabled = true;
-  btn.innerHTML = "✓"; // Quick checkmark icon
+  const id = Number(btn.dataset.id);
 
   try {
     await saveToFavourite(id);
+    btn.classList.toggle("save-btn-saved");
   } catch (error) {
-    btn.style.backgroundColor = "#dc3545"; // Error red
-    btn.disabled = false;
+    // btn.style.backgroundColor = "#dc3545"; // Error red
+    // btn.disabled = false;
     console.error("Save failed", error);
   }
+});
+
+//output favourites logic
+
+function showFavourites() {
+  const favorites = JSON.parse(localStorage.getItem("savedPictures")) || [];
+
+  // Hide the search form since we are just viewing saved items
+  searchForm.classList.add("visually-hidden");
+
+  if (favorites.length === 0) {
+    gallery.innerHTML =
+      '<p class="loading-indicator">No favourites saved yet!</p>';
+    return;
+  }
+
+  // Reuse your existing mapping logic to show the saved data
+  console.log(favorites);
+  let outputHTML = renderFavourites(favorites);
+  outputField.innerHTML = outputHTML;
+}
+
+navFavs.addEventListener("click", (e) => {
+  e.preventDefault();
+  outputField.innerHTML = "";
+  navMain.classList.remove("active");
+  navFavs.classList.add("active");
+  showFavourites();
+});
+
+navMain.addEventListener("click", (e) => {
+  e.preventDefault();
+  navFavs.classList.remove("active");
+  navMain.classList.add("active");
+  inputForm.classList.remove("visually-hidden");
+  outputField.innerHTML = `Please enter an image to search...`; // Clear or reload your last search
 });
