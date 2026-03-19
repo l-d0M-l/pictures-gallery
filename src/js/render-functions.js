@@ -1,11 +1,9 @@
 function renderData(data, page, totalPages) {
   let returnString = "";
   // console.log(data);
-  const savedDataLocalStorage = JSON.parse(
-    localStorage.getItem("savedPictures")
-  );
+  const savedDataLocalStorage =
+    JSON.parse(localStorage.getItem("savedPictures")) || [];
   // console.log(savedDataLocalStorage);
-  console.log(data);
   data.map((element) => {
     let classToAdd = `save-btn `;
     savedDataLocalStorage.map((elementLocal) => {

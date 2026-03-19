@@ -5,11 +5,9 @@ async function saveToFavourite(elementId) {
   const savedData = localStorage.getItem("savedPictures");
   let savedArray = savedData ? JSON.parse(savedData) : [];
 
-  //   console.log(savedArray);
   //  Delete if already saved
-
   const exists = savedArray.some((item) => item.id === elementId);
-  // console.log(exists);
+
   if (exists) {
     // 3. If it exists, filter it out (Delete)
     const arrayAfterDelete = savedArray.filter(
@@ -24,12 +22,11 @@ async function saveToFavourite(elementId) {
     const cardToSave = await getImageById(elementId);
 
     //  Create the new array with the new hit
-    const newSavedArray = [...savedArray, cardToSave.hits[0]];
+    const newSavedArray = [cardToSave.hits[0], ...savedArray];
 
     //  Convert the array back to a JSON string before saving
     localStorage.setItem("savedPictures", JSON.stringify(newSavedArray));
 
-    // console.log("Success! New array size:", newSavedArray.length);
   } catch (error) {
     console.error("Failed to save image:", error);
   }

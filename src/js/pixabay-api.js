@@ -15,7 +15,7 @@ async function getImagesByQuery(query, page) {
     },
   });
 
-  // console.log(response.data);
+  // console.dir(response.data);
   return response.data;
 }
 
@@ -29,7 +29,7 @@ async function getImageById(id) {
     },
   });
 
-  console.log(response.data);
+  // console.log(response.data);
 
   return response.data;
 }

@@ -1,87 +1,41 @@
-import getImagesByQuery from "./js/pixabay-api";
-import { renderData, renderFavourites } from "./js/render-functions";
-import saveToFavourite from "./js/saveToFavourite";
-
+import getImagesByQuery from "./js/pixabay-api.js";
+import { renderData, renderFavourites } from "./js/render-functions.js";
+import saveToFavourite from "./js/saveToFavourite.js";
+import { renderFunction, loadMoreFunction } from "./js/helper-functions.js";
+// Gettin html from the document
 const outputField = document.querySelector("#app");
 const searchForm = document.querySelector("#inputForm");
 const loadMoreBtn = document.querySelector("#ladMoreBtn");
-
-const loadingIndicator = document.querySelector("#loading-indicator");
-
 const navMain = document.querySelector("#nav-main");
 const navFavs = document.querySelector("#nav-favs");
 
-// saveToFavourite(10167855);
-// console.log(searchForm);
+
 
 searchForm.addEventListener("submit", sumbitFormHandler);
 outputField.innerHTML = `Please enter an image to search...`;
 
 let page = 1;
+const per_page = 20;
 let currentQuery = "";
+let isFavoritesMode = false;
+
 async function sumbitFormHandler(e) {
   outputField.innerHTML = "";
   page = 1;
   e.preventDefault();
   currentQuery = e.target[0].value;
 
-  renderFunction(currentQuery);
+  const responseData = await getImagesByQuery(currentQuery, page);
+  const totalPages = Math.ceil(responseData.totalHits / per_page);
+
+  renderFunction(responseData, totalPages, page, per_page);
 }
 
-loadMoreBtn.addEventListener("click", loadMoreFunction);
+loadMoreBtn.addEventListener("click", loadMoreHandler);
 
-function loadMoreFunction(e) {
-  e.preventDefault();
-
+function loadMoreHandler(e) {
   page += 1;
-
-  renderFunction(currentQuery);
-}
-
-async function renderFunction(searchQuery) {
-  document.querySelector("#collection-end").classList.add("visually-hidden");
-  loadMoreBtn.classList.add("visually-hidden");
-
-  loadingIndicator.classList.remove("visually-hidden");
-
-  try {
-    const responseData = await getImagesByQuery(searchQuery, page);
-    const outputHTML = renderData(responseData.hits);
-
-    // Hide indicator AS SOON AS data is back
-    loadingIndicator.classList.add("visually-hidden");
-
-    outputField.insertAdjacentHTML("beforeend", outputHTML);
-
-    // ... handle scrolling and Load More button visibility ...
-    const per_page = 20;
-    const totalPages = Math.ceil(responseData.totalHits / per_page);
-
-    if (page > 1) {
-      const galleryItem = document.querySelector(".js-gallery-item");
-
-      if (galleryItem) {
-        // Get the height of one card
-        const cardHeight = galleryItem.getBoundingClientRect().height;
-
-        window.scrollBy({
-          top: cardHeight * 2, // Scroll down 2 rows/cards
-          behavior: "smooth",
-        });
-      }
-    }
-
-    if (page < totalPages) {
-      loadMoreBtn.classList.remove("visually-hidden");
-    } else {
-      document
-        .querySelector("#collection-end")
-        .classList.remove("visually-hidden");
-    }
-  } catch (error) {
-    loadingIndicator.classList.add("visually-hidden");
-    console.error("Search failed", error);
-  }
+  loadMoreFunction(e, page, isFavoritesMode, currentQuery, per_page);
 }
 
 //scroll up logic
@@ -104,7 +58,7 @@ function scrollUpHandler() {
   });
 }
 
-//add to favouurites logic
+//add to favourites logic
 outputField.addEventListener("click", async (e) => {
   // Finds the button even if you click the icon inside it
   const btn = e.target.closest(".save-btn");
@@ -116,44 +70,59 @@ outputField.addEventListener("click", async (e) => {
     await saveToFavourite(id);
     btn.classList.toggle("save-btn-saved");
   } catch (error) {
-    // btn.style.backgroundColor = "#dc3545"; // Error red
-    // btn.disabled = false;
     console.error("Save failed", error);
   }
 });
 
 //output favourites logic
-
 function showFavourites() {
+  page = 1;
+  loadMoreBtn.classList.add("visually-hidden");
+
   const favorites = JSON.parse(localStorage.getItem("savedPictures")) || [];
 
   // Hide the search form since we are just viewing saved items
   searchForm.classList.add("visually-hidden");
 
   if (favorites.length === 0) {
-    gallery.innerHTML =
+    outputField.innerHTML =
       '<p class="loading-indicator">No favourites saved yet!</p>';
     return;
   }
 
-  // Reuse your existing mapping logic to show the saved data
-  console.log(favorites);
-  let outputHTML = renderFavourites(favorites);
-  outputField.innerHTML = outputHTML;
+  let startNumber = 0;
+  let endNumber = 0;
+  let dataToOutput = "";
+  if (favorites.length > per_page) {
+    endNumber += per_page;
+
+    dataToOutput = favorites.slice(startNumber, endNumber);
+    loadMoreBtn.classList.remove("visually-hidden");
+  } else {
+    dataToOutput = favorites;
+  }
+  //Show the saved data
+  let favsOutputHTML = renderFavourites(dataToOutput);
+  outputField.innerHTML = favsOutputHTML;
 }
 
 navFavs.addEventListener("click", (e) => {
   e.preventDefault();
+  scrollUpHandler();
   outputField.innerHTML = "";
   navMain.classList.remove("active");
   navFavs.classList.add("active");
+  isFavoritesMode = true;
   showFavourites();
 });
 
 navMain.addEventListener("click", (e) => {
   e.preventDefault();
+  searchForm.reset();
   navFavs.classList.remove("active");
   navMain.classList.add("active");
   inputForm.classList.remove("visually-hidden");
+  isFavoritesMode = false;
+  loadMoreBtn.classList.add("visually-hidden");
   outputField.innerHTML = `Please enter an image to search...`; // Clear or reload your last search
 });
